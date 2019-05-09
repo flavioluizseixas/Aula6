@@ -19,16 +19,23 @@ abstract public class Conta {
         this.dataAbertura = dataAbertura;
     }
 
-    public boolean sacar(double valor) {
-        if (valor <= this.saldo) {
-            this.saldo -= valor;
-            return true;
+    public void sacar(double valor) throws SaldoInsuficienteException {
+        if (valor < 0) {
+            throw new IllegalArgumentException("Valor inválido!");
         }
 
-        return false;
+        if (valor > this.saldo) {
+            throw new SaldoInsuficienteException("Saldo insuficiente");
+        }
+
+        this.saldo -= valor;
     }
 
     public void depositar(double valor) {
+        if (valor < 0) {
+            throw new IllegalArgumentException("Valor inválido!");
+        }
+
         this.saldo += valor;
     }
 
@@ -36,13 +43,9 @@ abstract public class Conta {
 
     abstract public double calcularTributacao(int periodo);
 
-    public boolean transferir(double valor, Conta contaDestino) {
-        if (sacar(valor)) {
-            contaDestino.depositar(valor);
-            return true;
-        }
-
-        return false;
+    public void transferir(double valor, Conta contaDestino) throws SaldoInsuficienteException {
+        sacar(valor);
+        contaDestino.depositar(valor);
     }
 
     public double getSaldo() {
