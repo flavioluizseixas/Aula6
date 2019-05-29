@@ -31,7 +31,7 @@ abstract public class Conta {
         this.saldo -= valor;
     }
 
-    public void depositar(double valor) {
+    public synchronized void depositar(double valor) {
         if (valor < 0) {
             throw new IllegalArgumentException("Valor inválido!");
         }
@@ -50,6 +50,10 @@ abstract public class Conta {
 
     public double getSaldo() {
         return this.saldo;
+    }
+
+    public int getNumero() {
+        return this.numero;
     }
 
     public double calcularSaldoFuturo(int periodo) {
